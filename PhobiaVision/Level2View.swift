@@ -80,34 +80,24 @@ struct Level2View: View {
                     let x = Float.random(in: -3.0...3.0)
                     let z = Float.random(in: -3.0...3.0)
                     let position = SIMD3<Float>(x, radius, z)
-
-//                    let sphere = MeshResource.generateSphere(radius: radius)
-//                    let material = SimpleMaterial(color: .red, isMetallic: false)
-//                    let ball = ModelEntity(mesh: sphere, materials: [material])
                     
                     let fileName: String = "source"
-                    guard let chair = try? await ModelEntity(named: fileName) else {
+                    guard let animal = try? await ModelEntity(named: fileName) else {
                         assertionFailure("Failed to load model: \(fileName)")
                         return
                     }
-
-                    // Generate collision shapes to the chair for proper occlusion.
-//                    chair.generateCollisionShapes(recursive: true)
-//                    
-//                    // Enable inputs to detect the hand gestures.
-//                    chair.components.set(InputTargetComponent())
                     
-                    chair.position = position
-                    chair.scale = SIMD3<Float>(0.0005, 0.0005, 0.0005)
-                    chair.name = "ball_\(i)"
-                    chair.components.set(InputTargetComponent())
-                    chair.generateCollisionShapes(recursive: false)
-                    
-
-                    content.add(chair)
+                    animal.position = position
+                    animal.scale = SIMD3<Float>(0.0005, 0.0005, 0.0005)
+                    animal.orientation = simd_quatf(angle: Float(i) * .pi / 4, axis: [0, 1, 0])
+                    animal.name = "ball_\(i)"
+                    animal.components.set(InputTargetComponent())
+                    animal.generateCollisionShapes(recursive: false)
+                
+                    content.add(animal)
 
                     DispatchQueue.main.async {
-                        ballEntities.append(chair)
+                        ballEntities.append(animal)
                     }
                 }
             }
@@ -121,7 +111,10 @@ struct Level2View: View {
                     }
             )
 //            .gesture(translationGesture)
-
+            // If you want to drag and move the models
+            
+            
+            // For Debugging Purpose
 //            Button(action: {
 //                resetSceneAndDismiss()
 //            }) {
