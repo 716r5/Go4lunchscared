@@ -12,11 +12,11 @@ struct PhobiaVisionApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-        }
+        }.windowResizability(.contentSize)
         
         WindowGroup(id: "Level1") {
-                    Level1View()
-                }
+            Level1View()
+        }.windowResizability(.contentSize)
         
         ImmersiveSpace(id: "Level2") {
             Level2View()

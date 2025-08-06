@@ -23,12 +23,12 @@ struct Level1View: View {
                 .font(.body)
                 .foregroundColor(.secondary)
         }
-        .padding()
-        .background(.ultraThinMaterial)
-        .cornerRadius(30)
-        .shadow(radius: 10)
+        .frame(
+            minWidth: 400, maxWidth: 500,
+            minHeight: 400, maxHeight: 500)
     }
 }
+
 #Preview {
     Level1View()
 }
