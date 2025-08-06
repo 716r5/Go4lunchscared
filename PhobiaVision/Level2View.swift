@@ -77,22 +77,37 @@ struct Level2View: View {
                 let radius: Float = 0.05
 
                 for i in 0..<ballCount {
-                    let x = Float.random(in: -5.0...5.0)
-                    let z = Float.random(in: -5.0...5.0)
+                    let x = Float.random(in: -3.0...3.0)
+                    let z = Float.random(in: -3.0...3.0)
                     let position = SIMD3<Float>(x, radius, z)
 
-                    let sphere = MeshResource.generateSphere(radius: radius)
-                    let material = SimpleMaterial(color: .red, isMetallic: false)
-                    let ball = ModelEntity(mesh: sphere, materials: [material])
-                    ball.position = position
-                    ball.name = "ball_\(i)"
-                    ball.components.set(InputTargetComponent())
-                    ball.generateCollisionShapes(recursive: false)
+//                    let sphere = MeshResource.generateSphere(radius: radius)
+//                    let material = SimpleMaterial(color: .red, isMetallic: false)
+//                    let ball = ModelEntity(mesh: sphere, materials: [material])
+                    
+                    let fileName: String = "source"
+                    guard let chair = try? await ModelEntity(named: fileName) else {
+                        assertionFailure("Failed to load model: \(fileName)")
+                        return
+                    }
 
-                    content.add(ball)
+                    // Generate collision shapes to the chair for proper occlusion.
+//                    chair.generateCollisionShapes(recursive: true)
+//                    
+//                    // Enable inputs to detect the hand gestures.
+//                    chair.components.set(InputTargetComponent())
+                    
+                    chair.position = position
+                    chair.scale = SIMD3<Float>(0.0005, 0.0005, 0.0005)
+                    chair.name = "ball_\(i)"
+                    chair.components.set(InputTargetComponent())
+                    chair.generateCollisionShapes(recursive: false)
+                    
+
+                    content.add(chair)
 
                     DispatchQueue.main.async {
-                        ballEntities.append(ball)
+                        ballEntities.append(chair)
                     }
                 }
             }
@@ -107,20 +122,20 @@ struct Level2View: View {
             )
 //            .gesture(translationGesture)
 
-            Button(action: {
-                resetSceneAndDismiss()
-            }) {
-                Label("Close", systemImage: "xmark.circle.fill")
-                    .font(.title)
-                    .fontWeight(.bold)
-                    .padding(.horizontal, 24)
-                    .padding(.vertical, 12)
-                    .background(Color.red.opacity(0.9))
-                    .foregroundColor(.white)
-                    .clipShape(Capsule())
-                    .shadow(radius: 10)
-                    .padding()
-            }
+//            Button(action: {
+//                resetSceneAndDismiss()
+//            }) {
+//                Label("Close", systemImage: "xmark.circle.fill")
+//                    .font(.title)
+//                    .fontWeight(.bold)
+//                    .padding(.horizontal, 24)
+//                    .padding(.vertical, 12)
+//                    .background(Color.red.opacity(0.9))
+//                    .foregroundColor(.white)
+//                    .clipShape(Capsule())
+//                    .shadow(radius: 10)
+//                    .padding()
+//            }
         }
     }
 }
