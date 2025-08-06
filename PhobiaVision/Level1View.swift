@@ -6,27 +6,32 @@
 //
 
 import SwiftUI
-import RealityKit
-
 struct Level1View: View {
     var body: some View {
-        RealityView { content in
-            let anchor = AnchorEntity(world: [0, 0, -1.5])  // Spider floats 1.5m in front of user
+        VStack {
+            Text("Level 1 Exposure")
+                .font(.title2)
+                .padding(.bottom, 10)
 
-            // Placeholder spider (pinkkkk sphere)
-            let spider = ModelEntity(
-                mesh: .generateSphere(radius: 0.1),
-                materials: [SimpleMaterial(color: .systemPink, isMetallic: false)]
-            )
+            Image("spiderImage")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 300, height: 300)
+                .padding()
 
-            spider.name = "spider"
-            spider.position = [0, 0, 0]
-
-            anchor.addChild(spider)
-            content.add(anchor)
+            Text("Breathe. It's just an image.")
+                .font(.body)
+                .foregroundColor(.secondary)
         }
+        .padding()
+        .background(.ultraThinMaterial)
+        .cornerRadius(30)
+        .shadow(radius: 10)
     }
 }
+
+
+
 #Preview {
     Level1View()
 }
