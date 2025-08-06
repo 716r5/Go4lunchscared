@@ -175,8 +175,11 @@ struct ContentView: View {
         // Example navigation (you'll need to implement this based on your app structure):
          switch level {
          case 1:
-             // Navigate to Level1View
-             print("1")
+             Task {
+                 await openImmersiveSpace(id: "Level1")
+                 isInImmersiveSpace = true
+             }
+
          case 2:
              Task {
                  await openImmersiveSpace(id: "Level2")
