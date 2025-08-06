@@ -10,8 +10,13 @@ import RealityKit
 import RealityKitContent
 
 struct ContentView: View {
+
     @State private var showLevels = false
     @State private var selectedLevel: Int?
+    @State private var isInImmersiveSpace = false
+    
+    @Environment(\.openImmersiveSpace) var openImmersiveSpace
+    @Environment(\.dismissImmersiveSpace) var dismissImmersiveSpace
     
     var body: some View {
         ZStack {
@@ -124,6 +129,26 @@ struct ContentView: View {
                     }
                 }
             }
+            .toolbar {
+                if isInImmersiveSpace {
+                    ToolbarItem(placement: placement) {
+                        Button(action: {
+                            Task {
+                                await dismissImmersiveSpace()
+                                isInImmersiveSpace = false
+                            }
+                        }) {
+                            Label("Close", systemImage: "xmark.circle.fill")
+                                .font(.title)
+                                .padding()
+                                .background(Color.red.opacity(0.8))
+                                .foregroundColor(.white)
+                                .clipShape(Capsule())
+                                .shadow(radius: 5)
+                        }
+                    }
+                }
+            }
         }
     }
     
@@ -148,21 +173,31 @@ struct ContentView: View {
         print("Navigating to Level \(level)")
         
         // Example navigation (you'll need to implement this based on your app structure):
-        // switch level {
-        // case 1:
-        //     // Navigate to Level1View
-        // case 2:
-        //     // Navigate to Level2View
-        // case 3:
-        //     // Navigate to Level3View
-        // case 4:
-        //     // Navigate to Level4View
-        // default:
-        //     break
-        // }
+         switch level {
+         case 1:
+             // Navigate to Level1View
+             print("1")
+         case 2:
+             Task {
+                 await openImmersiveSpace(id: "Level2")
+                 isInImmersiveSpace = true
+             }
+         case 3:
+             print("3")
+             // Navigate to Level3View
+         case 4:
+             print("4")
+             // Navigate to Level4View
+         default:
+             break
+         }
     }
-}
-
-#Preview(windowStyle: .automatic) {
-    ContentView()
+    
+    private var placement: ToolbarItemPlacement {
+            #if os(visionOS)
+            return .bottomOrnament
+            #else
+            return .primaryAction
+            #endif
+        }
 }
