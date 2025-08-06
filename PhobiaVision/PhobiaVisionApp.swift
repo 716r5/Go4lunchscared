@@ -14,7 +14,7 @@ struct PhobiaVisionApp: App {
             ContentView()
         }
         
-        ImmersiveSpace(id: "Level1") {
+        WindowGroup(id: "Level1") {
                     Level1View()
                 }
         

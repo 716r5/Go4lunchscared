@@ -29,9 +29,6 @@ struct Level1View: View {
         .shadow(radius: 10)
     }
 }
-
-
-
 #Preview {
     Level1View()
 }

@@ -15,6 +15,7 @@ struct ContentView: View {
     @State private var selectedLevel: Int?
     @State private var isInImmersiveSpace = false
     
+    @Environment(\.openWindow) private var openWindow
     @Environment(\.openImmersiveSpace) var openImmersiveSpace
     @Environment(\.dismissImmersiveSpace) var dismissImmersiveSpace
     
@@ -175,10 +176,7 @@ struct ContentView: View {
         // Example navigation (you'll need to implement this based on your app structure):
          switch level {
          case 1:
-             Task {
-                 await openImmersiveSpace(id: "Level1")
-                 isInImmersiveSpace = true
-             }
+             openWindow(id: "Level1")
 
          case 2:
              Task {
