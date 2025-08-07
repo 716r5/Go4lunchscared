@@ -4,62 +4,40 @@
 //
 //  Created by Wei Song on 6/8/25.
 //
-
 import SwiftUI
 
 struct Level1View: View {
-    @State private var flipped = false
-
-    let imageName = "spider1"
-    let message = "Breathe. It's just an image."
-
+    @Environment(\.openWindow) private var openWindow
+    
     var body: some View {
-        ZStack {
-            if flipped {
-                // Front: spider image + message
-                VStack(spacing: 20) {
-                    Text("Level 1 Exposure")
-                        .font(.title2)
+        VStack(spacing: 30) {
+            Text("Level 1 Exposure")
+                .font(.largeTitle)
+                .bold()
+            
+            Text("Your exposure begins. The cards will appear in front of you.\nYou can move them around freely.")
+                .multilineTextAlignment(.center)
+                .padding(.horizontal)
 
-                    Image(imageName)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 300, height: 300)
-                        .cornerRadius(20)
-                        .shadow(radius: 10)
-
-                    Text(message)
-                        .font(.body)
-                        .multilineTextAlignment(.center)
-                        .foregroundColor(.secondary)
-                }
-                .padding()
-                .frame(width: 400, height: 500)
-                .background(Color.white)
-                .cornerRadius(30)
-                .rotation3DEffect(.degrees(0), axis: (x: 0, y: 1, z: 0))
-            } else {
-                // Back: calm message only
-                VStack {
-                    Text("Flip when you're ready")
-                        .font(.headline)
-                        .multilineTextAlignment(.center)
-                        .padding()
-                }
-                .frame(width: 400, height: 500)
-                .background(Color.gray.opacity(0.2))
-                .cornerRadius(30)
-                .rotation3DEffect(.degrees(180), axis: (x: 0, y: 1, z: 0))
+            Button("Begin Exposure") {
+                // This will open 5 separate windows using your SpiderCardView
+                openWindow(id: "Spider1")
+                openWindow(id: "Spider2")
+                openWindow(id: "Spider3")
+                openWindow(id: "Spider4")
+                openWindow(id: "Spider5")
             }
+            .padding()
+            .background(Color.red)
+            .foregroundColor(.white)
+            .cornerRadius(20)
         }
-        .rotation3DEffect(.degrees(flipped ? 180 : 0), axis: (x: 0, y: 1, z: 0))
-        .onTapGesture {
-            withAnimation(.easeInOut(duration: 0.6)) {
-                flipped.toggle()
-            }
-        }
+        .padding()
+        // Initial window size
+        .frame(width: 500, height: 400)
     }
 }
+
 
 #Preview {
     Level1View()

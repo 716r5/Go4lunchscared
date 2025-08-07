@@ -42,6 +42,7 @@ struct ContentView: View {
                     .font(.system(size: 48, weight: .bold, design: .rounded))
                     .foregroundColor(.primary)
                     .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 2)
+                
 
                 if isInLevel1 {
                     // ================
@@ -54,7 +55,7 @@ struct ContentView: View {
                         Button(action: {
                             openWindow(id: "Level1")
                         }) {
-                            Text("Add Spider Into View")
+                            Text("Ready to face your fears?")
                                 .font(.system(size: 20, weight: .semibold, design: .rounded))
                                 .multilineTextAlignment(.center)
                                 .foregroundColor(.white)
@@ -68,6 +69,12 @@ struct ContentView: View {
                         }
                         .buttonStyle(PlainButtonStyle())
                         
+                        // Hardcoded toggle (not wired to logic yet)
+                        Toggle("Hide spider on first flip", isOn: .constant(true))
+                            .disabled(false)
+                            .padding(.horizontal)
+                            .foregroundColor(.secondary)
+
                         Button(action: {
                             withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
                                 isInLevel1 = false
@@ -90,8 +97,6 @@ struct ContentView: View {
                         }
                         .buttonStyle(PlainButtonStyle())
                     }
-                    
-                    
                     
                 } else if isInLevel2 {
                     // ================
@@ -246,7 +251,7 @@ struct ContentView: View {
                             .frame(width: 200, height: 60)
                             .bold()
                             .background(
-                                RoundedRectangle(cornerRadius: 30)
+                                RoundedRectangle(cornerRadius: 80)
                                     .fill(
                                         LinearGradient(
                                             gradient: Gradient(colors: [Color.blue, Color.purple]),
@@ -261,11 +266,7 @@ struct ContentView: View {
                     .opacity(showLevels ? 0 : 1)
                     .buttonStyle(PlainButtonStyle())
                 } else {
-                    
-                    
-                    
-                    
-                    
+                  
                     
                     // =======================
                     // Level Selection Menu
