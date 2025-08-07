@@ -27,6 +27,10 @@ struct PhobiaVisionApp: App {
             Level3View(options: $options)
         }
         
+        ImmersiveSpace(id: "Level4") {
+            Level4View()
+        }
+        
         ImmersiveSpace(id: "TestView") {
             TestView(options: $options)
         }

@@ -23,18 +23,34 @@ struct Level3View: View {
         DragGesture()
             .targetedToAnyEntity()
             .onChanged { value in
-                let targetEntity = value.entity
-                if initialPosition == nil {
-                    initialPosition = targetEntity.position
-                }
+                let entity = value.entity
 
+                if initialPosition == nil {
+                    initialPosition = entity.position
+                }
+                
+                // Set to static or kinematic to disable physics during drag
+                entity.components.set(PhysicsBodyComponent(
+                    massProperties: .default,
+                    material: .default,
+                    mode: .static
+                ))
+                
                 let movement = value.convert(value.translation3D, from: .global, to: .scene)
-                targetEntity.position = (initialPosition ?? .zero) + movement.grounded
-                targetEntity.components[PhysicsBodyComponent.self]?.mode = .kinematic
+                entity.position = (initialPosition ?? .zero) + movement
+                print("dragged")
             }
             .onEnded { value in
+                let entity = value.entity
+
+                entity.components.set(PhysicsBodyComponent(
+                    massProperties: .default,
+                    material: .default,
+                    mode: .dynamic
+                ))
+                
                 initialPosition = nil
-                value.entity.components[PhysicsBodyComponent.self]?.mode = .dynamic
+                print("released")
             }
     }
 
@@ -126,7 +142,7 @@ struct Level3View: View {
                     animal.components.set(PhysicsBodyComponent(
                         massProperties: .default,
                         material: .default,
-                        mode: .kinematic // set to kinematic so we can control movement manually
+                        mode: .static // set to kinematic so we can control movement manually
                     ))
                     
                     for anim in animal.availableAnimations {

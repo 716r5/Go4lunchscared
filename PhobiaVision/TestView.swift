@@ -29,13 +29,6 @@ struct TestView: View {
         DragGesture()
             .targetedToAnyEntity()
             .onChanged { value in
-//                guard let entity = value.entity as? ModelEntity else {
-//                    print("Entity type:", type(of: value.entity))
-//                    return
-//                }
-                
-                
-                
                 let entity = value.entity
 
                 if initialPosition == nil {
@@ -54,12 +47,6 @@ struct TestView: View {
                 print("dragged")
             }
             .onEnded { value in
-//                guard let entity = value.entity as? ModelEntity else {
-//                    print("Entity type:", type(of: value.entity))
-//                    return
-//                }
-                
-                
                 let entity = value.entity
 
                 entity.components.set(PhysicsBodyComponent(
@@ -98,20 +85,34 @@ struct TestView: View {
     }
 
     var body: some View {
+        let anchor = AnchorEntity(.plane(.horizontal,
+                             classification: .any,
+                              minimumBounds: [0.2, 0.2]),
+                               trackingMode: .predicted,
+                          physicsSimulation: .none)
+
+        
         ZStack(alignment: .topTrailing) {
             RealityView { content in
                 let meshAnchors = Entity()
                 runSession(meshAnchors)
                 content.add(meshAnchors)
                 
-                
+                let floor = ModelEntity(mesh: .generatePlane(width: 9, depth: 9))
+                            floor.model?.materials = [OcclusionMaterial()]
+                            floor.generateCollisionShapes(recursive: false)
+                            floor.physicsBody = .init()
+                            floor.physicsBody?.mode = .static
+                            anchor.addChild(floor)
 
+                content.add(anchor)
+                
                 let ballCount = Int(options.amountOfSpiders)
 
                 for i in 0..<ballCount {
                     let x = Float.random(in: -3.0...3.0)
                     let z = Float.random(in: -3.0...3.0)
-                    let position = SIMD3<Float>(x, 3, z)
+                    let position = SIMD3<Float>(x, 0.1, z)
                     
                     let fileName: String = options.animal
                     guard let animal = try? await ModelEntity(named: fileName) else {
@@ -120,27 +121,14 @@ struct TestView: View {
                     }
                     
                     let scale = 0.001 / 100 * Float(options.scaling)
-                    animal.scale = SIMD3<Float>(scale, scale, scale)
-                    
+                    animal.scale = SIMD3<Float>(1, 1, 1)
                     animal.position = position
-                    animal.orientation = simd_quatf(angle: Float(i) * .pi / 4, axis: [0, 1, 0])
-                    animal.name = "ball_\(i)"
-                    
                     animal.components.set(InputTargetComponent())
-                    
-                    
-                    
-                    let shape = ShapeResource.generateBox(size: [1, 1, 1])
-                    animal.collision = CollisionComponent(shapes: [shape])
                     animal.generateCollisionShapes(recursive: true)
+                    animal.physicsBody = .init()
+                    animal.physicsBody?.mode = .dynamic
                     
-                    animal.components.set(GroundingShadowComponent(castsShadow: true, receivesShadow: false))
-                    animal.components.set(PhysicsBodyComponent(
-                        massProperties: .default,
-                        material: .default,
-                        mode: .dynamic
-                    ))
-                
+
                     content.add(animal)
                 }
                 
@@ -160,18 +148,6 @@ struct TestView: View {
                 )
 
                 content.add(loadedBall)
-                
-                let floorMesh = MeshResource.generatePlane(width: 0.001, depth: 0.001)
-                let floorMaterial = SimpleMaterial(color: .white, isMetallic: false)
-
-                let floorEntity = ModelEntity(mesh: floorMesh, materials: [floorMaterial])
-                floorEntity.name = "InvisibleFloor"
-                floorEntity.collision = CollisionComponent(shapes: [.generateBox(size: [20, 0.1, 20])])
-                floorEntity.physicsBody = PhysicsBodyComponent(mode: .static)
-                
-                floorEntity.position = SIMD3<Float>(0, -1, 0)
-
-                content.add(floorEntity)
             }
             .gesture(translationGesture)
         }

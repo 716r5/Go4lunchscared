@@ -8,6 +8,7 @@
 import SwiftUI
 import RealityKit
 import RealityKitContent
+import ARKit
 
 struct ContentView: View {
 
@@ -20,6 +21,9 @@ struct ContentView: View {
     @State private var isInLevel1 = false
     @State private var isInLevel2 = false
     @State private var isInLevel3 = false
+    @State private var isInLevel4 = false
+    
+    @State var immersiveSpaceSupported = false
 
     @Environment(\.openWindow) private var openWindow
     @Environment(\.dismissWindow) private var dismissWindow
@@ -43,14 +47,14 @@ struct ContentView: View {
                     .foregroundColor(.primary)
                     .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 2)
                 
-                Button(action: {
-                    Task {
-                        await openImmersiveSpace(id: "TestView")
-                        isInImmersiveSpace = true
-                    }
-                }) {
-                    Text("Test Button")
-                }
+//                Button(action: {
+//                    Task {
+//                        await openImmersiveSpace(id: "TestView")
+//                        isInImmersiveSpace = true
+//                    }
+//                }) {
+//                    Text("Test Button")
+//                }
 
                 if isInLevel1 {
                     // ================
@@ -82,12 +86,20 @@ struct ContentView: View {
                             .disabled(false)
                             .padding(.horizontal)
                             .foregroundColor(.secondary)
+                        
+                        Text("")
+                            .padding()
 
                         Button(action: {
                             withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
                                 isInLevel1 = false
                                 showLevels = true
                                 dismissWindow(id: "Level1")
+                                dismissWindow(id: "Spider1")
+                                dismissWindow(id: "Spider2")
+                                dismissWindow(id: "Spider3")
+                                dismissWindow(id: "Spider4")
+                                dismissWindow(id: "Spider5")
                             }
                         }) {
                             Text("Exit Level 1")
@@ -110,10 +122,11 @@ struct ContentView: View {
                     // ================
                     // Screen for Level 2
                     // ================
-                    OptionsView(options: $options)
                     VStack(spacing: 20) {
                         Text("Level 2")
                             .font(.title)
+                        
+                        OptionsView(options: $options)
                         
                         Button(action: {
                             if isInImmersiveSpace {
@@ -142,6 +155,9 @@ struct ContentView: View {
                                 )
                         }
                         .buttonStyle(PlainButtonStyle())
+                        
+                        Text("Tip: You can pinch them away!")
+                            .padding()
                         
                         Button(action: {
                             withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
@@ -177,10 +193,11 @@ struct ContentView: View {
                     // ================
                     // Screen for Level 3
                     // ================
-                    OptionsView(options: $options)
                     VStack(spacing: 20) {
                         Text("Level 3")
                             .font(.title)
+                        
+                        OptionsView(options: $options)
                         
                         Button(action: {
                             if isInImmersiveSpace {
@@ -210,6 +227,9 @@ struct ContentView: View {
                         }
                         .buttonStyle(PlainButtonStyle())
                         
+                        Text("")
+                            .padding()
+                        
                         Button(action: {
                             withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
                                 isInLevel3 = false
@@ -238,6 +258,74 @@ struct ContentView: View {
                     }
                     
                     
+                    
+                
+                } else if isInLevel4 {
+                    // ================
+                    // Screen for Level 4
+                    // ================
+                    VStack(spacing: 20) {
+                        Text("Level 4")
+                            .font(.title)
+                        
+                        Button(action: {
+                            if isInImmersiveSpace {
+                                Task {
+                                    await dismissImmersiveSpace()
+                                    isInImmersiveSpace = false
+                                }
+                            } else {
+                                Task {
+                                    await openImmersiveSpace(id: "Level4")
+                                    isInImmersiveSpace = true
+                                }
+                            }
+                            
+                        }) {
+                            Text(isInImmersiveSpace ? "Stop" :"Start")
+                                .font(.system(size: 20, weight: .semibold, design: .rounded))
+                                .multilineTextAlignment(.center)
+                                .foregroundColor(.white)
+                                .padding()
+                                .frame(maxWidth: 300)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 20)
+                                        .fill(.red)
+                                        .shadow(radius: 5)
+                                )
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                        
+                        Text("")
+                            .padding()
+                        
+                        Button(action: {
+                            withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
+                                isInLevel4 = false
+                                showLevels = true
+                                
+                                Task {
+                                    await dismissImmersiveSpace()
+                                    isInImmersiveSpace = false
+                                }
+                            }
+                        }) {
+                            Text("Exit Level 4")
+                                .font(.system(size: 18, weight: .medium, design: .rounded))
+                                .foregroundColor(.primary)
+                                .frame(width: 140, height: 40)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 20)
+                                        .fill(Color.white.opacity(0.2))
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 20)
+                                                .stroke(Color.primary.opacity(0.3), lineWidth: 1)
+                                        )
+                                )
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                    }
+
                     
                     
                 } else if !showLevels {
@@ -350,7 +438,7 @@ struct ContentView: View {
         }
         .frame(
             minWidth: 500, maxWidth: 750,
-            minHeight: 500, maxHeight: 750
+            minHeight: 750, maxHeight: 900
         )
     }
 
@@ -382,8 +470,8 @@ struct ContentView: View {
             isInLevel3 = true
             showLevels = false
         case 4:
-            print("Navigating to Level 4")
-            // Implement Level 4 navigation
+            isInLevel4 = true
+            showLevels = false
         default:
             break
         }
