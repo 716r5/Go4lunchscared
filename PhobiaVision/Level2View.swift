@@ -90,8 +90,8 @@ struct Level2View: View {
                     }
                     
                     let scale = 0.001 / 100 * Float(options.scaling)
-                    animal.position = position
                     animal.scale = SIMD3<Float>(scale, scale, scale)
+                    animal.position = position
                     animal.orientation = simd_quatf(angle: Float(i) * .pi / 4, axis: [0, 1, 0])
                     animal.name = "ball_\(i)"
                     animal.components.set(InputTargetComponent())

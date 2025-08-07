@@ -102,12 +102,20 @@ struct ContentView: View {
                             .font(.title)
                         
                         Button(action: {
-                            Task {
-                                await openImmersiveSpace(id: "Level2")
-                                isInImmersiveSpace = true
+                            if isInImmersiveSpace {
+                                Task {
+                                    await dismissImmersiveSpace()
+                                    isInImmersiveSpace = false
+                                }
+                            } else {
+                                Task {
+                                    await openImmersiveSpace(id: "Level2")
+                                    isInImmersiveSpace = true
+                                }
                             }
+                            
                         }) {
-                            Text("Start")
+                            Text(isInImmersiveSpace ? "Stop" :"Start")
                                 .font(.system(size: 20, weight: .semibold, design: .rounded))
                                 .multilineTextAlignment(.center)
                                 .foregroundColor(.white)
@@ -119,7 +127,7 @@ struct ContentView: View {
                                         .shadow(radius: 5)
                                 )
                         }
-                        .disabled(isInImmersiveSpace)
+//                        .disabled(isInImmersiveSpace)
                         .buttonStyle(PlainButtonStyle())
                         
                         Button(action: {
