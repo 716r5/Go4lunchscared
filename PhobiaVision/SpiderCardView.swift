@@ -9,15 +9,15 @@
 import SwiftUI
 
 struct SpiderCardView: View {
-    let imageName: String
-    let message: String
+    let imageName: String //eg spider1
+    let message: String //encoruagign msg
 
     @State private var flipped = false
 
     var body: some View {
         ZStack {
             if flipped {
-                // Front: spider image
+                // Front: spider image + msg
                 VStack(spacing: 20) {
                     Text("Exposure")
                         .font(.title)
@@ -39,7 +39,7 @@ struct SpiderCardView: View {
                 .cornerRadius(30)
                 .rotation3DEffect(.degrees(0), axis: (x: 0, y: 1, z: 0))
             } else {
-                // Back: generic card
+                // Back: generic card initial view
                 VStack {
                     Text("Flip when you're ready")
                         .font(.headline)
@@ -51,6 +51,8 @@ struct SpiderCardView: View {
                 .rotation3DEffect(.degrees(180), axis: (x: 0, y: 1, z: 0))
             }
         }
+        
+        // flip animation (rotation3DEffect(_:axis:anchor:anchorZ:perspective:) -> render content view
         .rotation3DEffect(.degrees(flipped ? 180 : 0), axis: (x: 0, y: 1, z: 0))
         .onTapGesture {
             withAnimation(.easeInOut(duration: 0.6)) {
