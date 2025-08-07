@@ -27,6 +27,9 @@ struct PhobiaVisionApp: App {
             Level3View(options: $options)
         }
         
+        ImmersiveSpace(id: "TestView") {
+            TestView(options: $options)
+        }
         WindowGroup(id: "Spider1") {
                     SpiderCardView(imageName: "spider1", message: "Breathe. It's just an image.")
                 }.windowResizability(.contentSize)

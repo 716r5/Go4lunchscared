@@ -19,6 +19,6 @@ struct OptionsStruct {
     init() {
         self.amountOfSpiders = 30
         self.scaling = 50
-        self.animal = "Spider"
+        self.animal = "Cockroach"
     }
 }

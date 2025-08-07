@@ -5,29 +5,175 @@
 //  Created by Wei Song on 6/8/25.
 //
 
+//
+//  Level3View.swift
+//  PhobiaVision
+//
+//  Created by Wei Song on 6/8/25.
+//
+
 import SwiftUI
+import RealityKit
+import ARKit
+import RealityKitContent
 
 struct TestView: View {
-    var body: some View {
-        Text("START")
-            .font(.system(size: 24, weight: .semibold, design: .rounded))
-            .foregroundColor(.white)
-            .frame(width: 200, height: 60)
-            .bold()
-            .background(
-                RoundedRectangle(cornerRadius: 30)
-                    .fill(
-                        LinearGradient(
-                            gradient: Gradient(colors: [Color.blue, Color.purple]),
-                            startPoint: .leading,
-                            endPoint: .trailing
-                        )
-                    )
-                    .shadow(color: .black.opacity(0.3), radius: 10, x: 0, y: 5)
-            )
-    }
-}
+    @State var initialPosition: SIMD3<Float>? = nil
+    
+    @Binding var options: OptionsStruct
+    
+    /// Used to dismiss the RealityView/Sheet
+    @Environment(\.dismiss) var dismiss
 
-#Preview {
-    TestView()
+    var translationGesture: some Gesture {
+        DragGesture()
+            .targetedToAnyEntity()
+            .onChanged { value in
+//                guard let entity = value.entity as? ModelEntity else {
+//                    print("Entity type:", type(of: value.entity))
+//                    return
+//                }
+                
+                
+                
+                let entity = value.entity
+
+                if initialPosition == nil {
+                    initialPosition = entity.position
+                }
+                
+                // Set to static or kinematic to disable physics during drag
+                entity.components.set(PhysicsBodyComponent(
+                    massProperties: .default,
+                    material: .default,
+                    mode: .static
+                ))
+                
+                let movement = value.convert(value.translation3D, from: .global, to: .scene)
+                entity.position = (initialPosition ?? .zero) + movement
+                print("dragged")
+            }
+            .onEnded { value in
+//                guard let entity = value.entity as? ModelEntity else {
+//                    print("Entity type:", type(of: value.entity))
+//                    return
+//                }
+                
+                
+                let entity = value.entity
+
+                entity.components.set(PhysicsBodyComponent(
+                    massProperties: .default,
+                    material: .default,
+                    mode: .dynamic
+                ))
+                
+                initialPosition = nil
+                print("released")
+            }
+    }
+
+    func runSession(_ meshAnchors: Entity) {
+        let arSession = ARKitSession()
+        let sceneReconstruction = SceneReconstructionProvider()
+
+        Task {
+            let generator = MeshAnchorGenerator(root: meshAnchors)
+
+            guard SceneReconstructionProvider.isSupported else {
+                print("SceneReconstructionProvider is not supported on this device.")
+                return
+            }
+
+            do {
+                try await arSession.run([sceneReconstruction])
+            } catch let error as ARKitSession.Error {
+                print("ARKit session error: \(error.localizedDescription)")
+            } catch {
+                print("Unexpected error: \(error.localizedDescription)")
+            }
+
+            await generator.run(sceneReconstruction)
+        }
+    }
+
+    var body: some View {
+        ZStack(alignment: .topTrailing) {
+            RealityView { content in
+                let meshAnchors = Entity()
+                runSession(meshAnchors)
+                content.add(meshAnchors)
+                
+                
+
+                let ballCount = Int(options.amountOfSpiders)
+
+                for i in 0..<ballCount {
+                    let x = Float.random(in: -3.0...3.0)
+                    let z = Float.random(in: -3.0...3.0)
+                    let position = SIMD3<Float>(x, 3, z)
+                    
+                    let fileName: String = options.animal
+                    guard let animal = try? await ModelEntity(named: fileName) else {
+                        assertionFailure("Failed to load model: \(fileName)")
+                        return
+                    }
+                    
+                    let scale = 0.001 / 100 * Float(options.scaling)
+                    animal.scale = SIMD3<Float>(scale, scale, scale)
+                    
+                    animal.position = position
+                    animal.orientation = simd_quatf(angle: Float(i) * .pi / 4, axis: [0, 1, 0])
+                    animal.name = "ball_\(i)"
+                    
+                    animal.components.set(InputTargetComponent())
+                    
+                    
+                    
+                    let shape = ShapeResource.generateBox(size: [1, 1, 1])
+                    animal.collision = CollisionComponent(shapes: [shape])
+                    animal.generateCollisionShapes(recursive: true)
+                    
+                    animal.components.set(GroundingShadowComponent(castsShadow: true, receivesShadow: false))
+                    animal.components.set(PhysicsBodyComponent(
+                        massProperties: .default,
+                        material: .default,
+                        mode: .dynamic
+                    ))
+                
+                    content.add(animal)
+                }
+                
+                let radius: Float = 0.2
+                let sphereMesh = MeshResource.generateSphere(radius: radius)
+                let sphereMaterial = SimpleMaterial(color: .red, isMetallic: true)
+
+                let loadedBall = ModelEntity(mesh: sphereMesh, materials: [sphereMaterial])
+                loadedBall.position = [0, 1, 0]
+                loadedBall.name = "ball"
+                loadedBall.components.set(InputTargetComponent())
+                loadedBall.generateCollisionShapes(recursive: true)
+                loadedBall.physicsBody = PhysicsBodyComponent(
+                    massProperties: .default,
+                    material: .default,
+                    mode: .dynamic
+                )
+
+                content.add(loadedBall)
+                
+                let floorMesh = MeshResource.generatePlane(width: 0.001, depth: 0.001)
+                let floorMaterial = SimpleMaterial(color: .white, isMetallic: false)
+
+                let floorEntity = ModelEntity(mesh: floorMesh, materials: [floorMaterial])
+                floorEntity.name = "InvisibleFloor"
+                floorEntity.collision = CollisionComponent(shapes: [.generateBox(size: [20, 0.1, 20])])
+                floorEntity.physicsBody = PhysicsBodyComponent(mode: .static)
+                
+                floorEntity.position = SIMD3<Float>(0, -1, 0)
+
+                content.add(floorEntity)
+            }
+            .gesture(translationGesture)
+        }
+    }
 }

@@ -83,13 +83,20 @@ struct Level2View: View {
                     let z = Float.random(in: -3.0...3.0)
                     let position = SIMD3<Float>(x, 0.01, z)
                     
-                    let fileName: String = "source"
+                    let fileName: String = options.animal
                     guard let animal = try? await ModelEntity(named: fileName) else {
                         assertionFailure("Failed to load model: \(fileName)")
                         return
                     }
                     
-                    let scale = 0.001 / 100 * Float(options.scaling)
+                    var scale: Float
+
+                    if options.animal == "Lizard" {
+                        scale = 0.1 / 100 * Float(options.scaling)
+                    } else {
+                        scale = 0.001 / 100 * Float(options.scaling)
+                    }
+                    
                     animal.scale = SIMD3<Float>(scale, scale, scale)
                     
                     animal.position = position

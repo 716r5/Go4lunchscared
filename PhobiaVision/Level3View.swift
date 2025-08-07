@@ -99,16 +99,23 @@ struct Level3View: View {
                     let z = Float.random(in: -3.0...3.0)
                     let startPosition = SIMD3<Float>(x, 0.01, z)
 
-                    let fileName = "source"
+                    let fileName = options.animal
                     guard let animal = try? await ModelEntity(named: fileName) else {
                         assertionFailure("Failed to load model: \(fileName)")
                         return
                     }
 
-                    let scale = 0.001 / 100 * Float(options.scaling)
+                    var scale: Float
+
+                    if options.animal == "Lizard" {
+                        scale = 0.1 / 100 * Float(options.scaling)
+                    } else {
+                        scale = 0.001 / 100 * Float(options.scaling)
+                    }
+                    
                     animal.scale = SIMD3<Float>(scale, scale, scale)
                     animal.position = startPosition
-                    animal.orientation = simd_quatf(angle: Float(i) * .pi / 4, axis: [0, 1, 0])
+                    animal.orientation = simd_quatf(angle: 90, axis: [0, 1, 0])
                     animal.name = "ball_\(i)"
                     animal.components.set(InputTargetComponent())
 
@@ -121,6 +128,12 @@ struct Level3View: View {
                         material: .default,
                         mode: .kinematic // set to kinematic so we can control movement manually
                     ))
+                    
+                    for anim in animal.availableAnimations {
+                        animal.playAnimation(anim.repeat(duration: .infinity),
+                                                  transitionDuration: 1.25,
+                                                  startsPaused: false)
+                    }
 
                     content.add(animal)
 
@@ -128,52 +141,55 @@ struct Level3View: View {
                         ballEntities.append(animal)
 
                         var direction: Float = 1.0
-                        let speed: Float = 0.5  // meters per second
-                        let maxDistance: Float = 0.5
+                        let speed: Float = 1.0  // meters per second
+                        
+                        var maxDistance: Float
+                        if options.animal == "Lizard" || options.animal == "Snake"{
+                            maxDistance = 1
+                        } else {
+                            maxDistance = 0.2
+                        }
+                        
                         let originalX = startPosition.x
 
-                        let timer = Timer.scheduledTimer(withTimeInterval: 0.016, repeats: true) { _ in
-                            let delta: Float = 0.016
-                            var newX = animal.position.x + direction * speed * delta
-
-                            let distanceFromOrigin = newX - originalX
-
-                            if abs(distanceFromOrigin) >= maxDistance {
-                                // Reverse direction
-                                direction *= -1
-
-                                // Rotate 180 degrees around Y axis
-                                let turn = simd_quatf(angle: .pi, axis: [0, 1, 0])
-                                animal.orientation = turn * animal.orientation
-
-                                // Continue from current position, don't snap
-                                newX = animal.position.x + direction * speed * delta
+                        let timer2 = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+                            var innerTimer: Timer?
+                            
+                            innerTimer = Timer.scheduledTimer(withTimeInterval: 0.016, repeats: true) { _ in
+                                if direction == 1.0 {
+                                    animal.orientation = simd_quatf(angle: -80, axis: [0, 1, 0])
+                                } else {
+                                    animal.orientation = simd_quatf(angle: 80, axis: [0, 1, 0])
+                                }
+                                
+                                let delta: Float = 0.016
+                                var newX = animal.position.x + direction * speed * delta
+                                
+                                let distanceFromOrigin = newX - originalX
+                                
+                                if abs(distanceFromOrigin) >= maxDistance {
+                                    direction *= -1
+                                    newX = animal.position.x + direction * speed * delta
+                                }
+                                
+                                animal.position.x = newX
                             }
 
-                            animal.position.x = newX
+                            if let innerTimer = innerTimer {
+                                timers.append(innerTimer)
+
+                                // Stop the inner timer after 0.4 seconds
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                                    innerTimer.invalidate()
+                                }
+                            }
                         }
 
-                        timers.append(timer)
+                        timers.append(timer2)
                     }
                 }
             }
             .gesture(translationGesture)
-
-            // Uncomment for a reset button
-//            Button(action: {
-//                resetSceneAndDismiss()
-//            }) {
-//                Label("Close", systemImage: "xmark.circle.fill")
-//                    .font(.title)
-//                    .fontWeight(.bold)
-//                    .padding(.horizontal, 24)
-//                    .padding(.vertical, 12)
-//                    .background(Color.red.opacity(0.9))
-//                    .foregroundColor(.white)
-//                    .clipShape(Capsule())
-//                    .shadow(radius: 10)
-//                    .padding()
-//            }
         }
     }
 }

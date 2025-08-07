@@ -42,6 +42,15 @@ struct ContentView: View {
                     .font(.system(size: 48, weight: .bold, design: .rounded))
                     .foregroundColor(.primary)
                     .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 2)
+                
+                Button(action: {
+                    Task {
+                        await openImmersiveSpace(id: "TestView")
+                        isInImmersiveSpace = true
+                    }
+                }) {
+                    Text("Test Button")
+                }
 
                 if isInLevel1 {
                     // ================
