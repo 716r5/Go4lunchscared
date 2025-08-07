@@ -19,6 +19,7 @@ struct ContentView: View {
     
     @State private var isInLevel1 = false
     @State private var isInLevel2 = false
+    @State private var isInLevel3 = false
 
     @Environment(\.openWindow) private var openWindow
     @Environment(\.dismissWindow) private var dismissWindow
@@ -127,7 +128,6 @@ struct ContentView: View {
                                         .shadow(radius: 5)
                                 )
                         }
-//                        .disabled(isInImmersiveSpace)
                         .buttonStyle(PlainButtonStyle())
                         
                         Button(action: {
@@ -156,6 +156,74 @@ struct ContentView: View {
                         }
                         .buttonStyle(PlainButtonStyle())
                     }
+                    
+                    
+                    
+                    
+                } else if isInLevel3 {
+                    // ================
+                    // Screen for Level 3
+                    // ================
+                    OptionsView(options: $options)
+                    VStack(spacing: 20) {
+                        Text("Level 3")
+                            .font(.title)
+                        
+                        Button(action: {
+                            if isInImmersiveSpace {
+                                Task {
+                                    await dismissImmersiveSpace()
+                                    isInImmersiveSpace = false
+                                }
+                            } else {
+                                Task {
+                                    await openImmersiveSpace(id: "Level3")
+                                    isInImmersiveSpace = true
+                                }
+                            }
+                            
+                        }) {
+                            Text(isInImmersiveSpace ? "Stop" :"Start")
+                                .font(.system(size: 20, weight: .semibold, design: .rounded))
+                                .multilineTextAlignment(.center)
+                                .foregroundColor(.white)
+                                .padding()
+                                .frame(maxWidth: 300)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 20)
+                                        .fill(.red)
+                                        .shadow(radius: 5)
+                                )
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                        
+                        Button(action: {
+                            withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
+                                isInLevel3 = false
+                                showLevels = true
+                                
+                                Task {
+                                    await dismissImmersiveSpace()
+                                    isInImmersiveSpace = false
+                                }
+                            }
+                        }) {
+                            Text("Exit Level 3")
+                                .font(.system(size: 18, weight: .medium, design: .rounded))
+                                .foregroundColor(.primary)
+                                .frame(width: 140, height: 40)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 20)
+                                        .fill(Color.white.opacity(0.2))
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 20)
+                                                .stroke(Color.primary.opacity(0.3), lineWidth: 1)
+                                        )
+                                )
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                    }
+                    
                     
                     
                     
@@ -302,8 +370,8 @@ struct ContentView: View {
             isInLevel2 = true
             showLevels = false
         case 3:
-            print("Navigating to Level 3")
-            // Implement Level 3 navigation
+            isInLevel3 = true
+            showLevels = false
         case 4:
             print("Navigating to Level 4")
             // Implement Level 4 navigation
