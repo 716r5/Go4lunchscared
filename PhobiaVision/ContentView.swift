@@ -312,3 +312,8 @@ struct ContentView: View {
         #endif
     }
 }
+
+#Preview {
+    @Previewable @State var options: OptionsStruct = .init()
+    ContentView(options: $options)
+}
