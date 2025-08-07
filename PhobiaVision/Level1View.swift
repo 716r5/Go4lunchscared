@@ -15,7 +15,7 @@ struct Level1View: View {
                 .font(.largeTitle)
                 .bold()
             
-            Text("Your exposure begins. The cards will appear in front of you.\nYou can move them around freely.")
+            Text("Welcome to your first challenge.\nYou’ll be surrounded by five static images of spiders — gentle, real-world photos.\n\nTake a deep breath.\nYou're safe here. You're in control.\n\nWhen you're ready, flip each card to reveal the spider underneath.\nYou don’t have to rush — go at your own pace.\n\nYou’ve already taken a brave step just by being here.\nFlip all five cards to move on to the next round.")
                 .multilineTextAlignment(.center)
                 .padding(.horizontal)
 
@@ -27,14 +27,14 @@ struct Level1View: View {
                 openWindow(id: "Spider4")
                 openWindow(id: "Spider5")
             }
-            .padding()
-            .background(Color.red)
+            .padding(16)
+            .background(Color.pink)
             .foregroundColor(.white)
             .cornerRadius(20)
         }
         .padding()
         // Initial window size
-        .frame(width: 500, height: 400)
+        .frame(width: 800, height: 500)
     }
 }
 
