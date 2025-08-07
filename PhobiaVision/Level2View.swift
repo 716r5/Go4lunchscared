@@ -76,12 +76,12 @@ struct Level2View: View {
                 content.add(meshAnchors)
 
                 let ballCount = Int(options.amountOfSpiders)
-                let radius: Float = 0.05
+//                let radius: Float = 0.05
 
                 for i in 0..<ballCount {
                     let x = Float.random(in: -3.0...3.0)
                     let z = Float.random(in: -3.0...3.0)
-                    let position = SIMD3<Float>(x, radius, z)
+                    let position = SIMD3<Float>(x, 0.01, z)
                     
                     let fileName: String = "source"
                     guard let animal = try? await ModelEntity(named: fileName) else {
@@ -91,11 +91,13 @@ struct Level2View: View {
                     
                     let scale = 0.001 / 100 * Float(options.scaling)
                     animal.scale = SIMD3<Float>(scale, scale, scale)
+                    
                     animal.position = position
                     animal.orientation = simd_quatf(angle: Float(i) * .pi / 4, axis: [0, 1, 0])
                     animal.name = "ball_\(i)"
                     animal.components.set(InputTargetComponent())
                     animal.generateCollisionShapes(recursive: false)
+                    animal.components.set(GroundingShadowComponent(castsShadow: true, receivesShadow: false))
                 
                     content.add(animal)
 
