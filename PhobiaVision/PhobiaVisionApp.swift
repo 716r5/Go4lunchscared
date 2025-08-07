@@ -9,9 +9,10 @@ import SwiftUI
 
 @main
 struct PhobiaVisionApp: App {
+    @State private var options: OptionsStruct = .init()
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(options: $options)
         }.windowResizability(.contentSize)
         
         WindowGroup(id: "Level1") {
@@ -19,7 +20,7 @@ struct PhobiaVisionApp: App {
         }.windowResizability(.contentSize)
         
         ImmersiveSpace(id: "Level2") {
-            Level2View()
+            Level2View(options: $options)
         }
     }
 }

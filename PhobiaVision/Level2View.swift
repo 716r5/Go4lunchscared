@@ -14,6 +14,8 @@ struct Level2View: View {
     @State var initialPosition: SIMD3<Float>? = nil
     @State private var ballEntities: [ModelEntity] = []
     
+    @Binding var options: OptionsStruct
+    
     /// Used to dismiss the RealityView/Sheet
     @Environment(\.dismiss) var dismiss
 
@@ -73,7 +75,7 @@ struct Level2View: View {
                 runSession(meshAnchors)
                 content.add(meshAnchors)
 
-                let ballCount = 30
+                let ballCount = Int(options.amountOfSpiders)
                 let radius: Float = 0.05
 
                 for i in 0..<ballCount {
@@ -87,8 +89,9 @@ struct Level2View: View {
                         return
                     }
                     
+                    let scale = 0.001 / 100 * Float(options.scaling)
                     animal.position = position
-                    animal.scale = SIMD3<Float>(0.0005, 0.0005, 0.0005)
+                    animal.scale = SIMD3<Float>(scale, scale, scale)
                     animal.orientation = simd_quatf(angle: Float(i) * .pi / 4, axis: [0, 1, 0])
                     animal.name = "ball_\(i)"
                     animal.components.set(InputTargetComponent())

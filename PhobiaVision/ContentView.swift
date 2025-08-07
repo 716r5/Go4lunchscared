@@ -4,6 +4,7 @@
 //
 //  Created by Wei Song on 6/8/25.
 //
+
 import SwiftUI
 import RealityKit
 import RealityKitContent
@@ -13,6 +14,8 @@ struct ContentView: View {
     @State private var showLevels = false
     @State private var selectedLevel: Int?
     @State private var isInImmersiveSpace = false
+    
+    @Binding var options: OptionsStruct
     
     @State private var isInLevel1 = false
     @State private var isInLevel2 = false
@@ -93,7 +96,7 @@ struct ContentView: View {
                     // ================
                     // Screen for Level 2
                     // ================
-                    OptionsView()
+                    OptionsView(options: $options)
                     VStack(spacing: 20) {
                         Text("Level 2")
                             .font(.title)

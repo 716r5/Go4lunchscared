@@ -8,32 +8,30 @@
 import SwiftUI
 
 struct OptionsView: View {
-    @State var amountOfSpiders: Double = 30
-    @State var scaling: Double = 50
-    @State var animal = "Spider"
+    @Binding var options: OptionsStruct
     
     var body: some View {
         VStack {
             Slider(
-                value: $amountOfSpiders,
+                value: $options.amountOfSpiders,
                 in: 1...100,
                 step: 1
             )
             .frame(width: 200)
             
-            Text("Number of \(animal): \(Int(amountOfSpiders))")
+            Text("Number of \(options.animal): \(Int(options.amountOfSpiders))")
 
             Text("")
                 .padding()
             
             Slider(
-                value: $scaling,
-                in: 1...100,
+                value: $options.scaling,
+                in: 10...100,
                 step: 1
             )
             .frame(width: 200)
             
-            Text("Size of \(animal): \(Int(scaling))%")
+            Text("Size of \(options.animal): \(Int(options.scaling))%")
             
             Text("")
                 .padding()
@@ -41,7 +39,7 @@ struct OptionsView: View {
             Text("Choose Animal")
             HStack {
                 Button(action: {
-                    animal = "Spider"
+                    options.animal = "Spider"
                 }) {
                     Text("Spider")
                 }
@@ -52,7 +50,7 @@ struct OptionsView: View {
                 
                 
                 Button(action: {
-                    animal = "Cockroach"
+                    options.animal = "Cockroach"
                 }) {
                     Text("Cockroach")
                 }
@@ -62,7 +60,7 @@ struct OptionsView: View {
                 .buttonStyle(PlainButtonStyle())
                 
                 Button(action: {
-                    animal = "Lizard"
+                    options.animal = "Lizard"
                 }) {
                     Text("Lizard")
                 }
@@ -72,7 +70,7 @@ struct OptionsView: View {
                 .buttonStyle(PlainButtonStyle())
                 
                 Button(action: {
-                    animal = "Snake"
+                    options.animal = "Snake"
                 }) {
                     Text("Snake")
                 }
@@ -86,5 +84,6 @@ struct OptionsView: View {
 }
 
 #Preview(windowStyle: .automatic) {
-    OptionsView()
+    @Previewable @State var options: OptionsStruct = .init()
+    OptionsView(options: $options)
 }
