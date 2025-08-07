@@ -26,5 +26,26 @@ struct PhobiaVisionApp: App {
         ImmersiveSpace(id: "Level3") {
             Level3View(options: $options)
         }
+        
+        WindowGroup(id: "Spider1") {
+                    SpiderCardView(imageName: "spider1", message: "Breathe. It's just an image.")
+                }.windowResizability(.contentSize)
+
+                WindowGroup(id: "Spider2") {
+                    SpiderCardView(imageName: "spider2", message: "You are being very brave right now.")
+                }.windowResizability(.contentSize)
+
+                WindowGroup(id: "Spider3") {
+                    SpiderCardView(imageName: "spider3", message: "It's OK — it's not real.")
+                }.windowResizability(.contentSize)
+
+                WindowGroup(id: "Spider4") {
+                    SpiderCardView(imageName: "spider4", message: "You're doing better than you think.")
+                }.windowResizability(.contentSize)
+
+                WindowGroup(id: "Spider5") {
+                    SpiderCardView(imageName: "spider5", message: "Stay calm, you're safe.")
+                }.windowResizability(.contentSize)
+        
     }
 }
