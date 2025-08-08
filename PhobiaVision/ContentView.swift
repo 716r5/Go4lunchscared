@@ -265,6 +265,8 @@ struct ContentView: View {
                         Text("Level 4")
                             .font(.title)
                         
+                        OptionsView(options: $options)
+                        
                         Button(action: {
                             if isInImmersiveSpace {
                                 Task {

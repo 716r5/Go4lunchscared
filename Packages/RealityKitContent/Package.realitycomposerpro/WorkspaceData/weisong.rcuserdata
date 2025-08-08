@@ -2,10 +2,15 @@
   "advancedEditorSelectedIdentifier" : "ProjectBrowser",
   "openSceneRelativePaths" : [
     "Scene.usda",
-    "SpiderScene.usda"
+    "SpiderScene.usda",
+    "CockroachScene.usda",
+    "LizardScene.usda",
+    "SnakeScene.usda"
   ],
   "recentIdentifiers" : {
+    "03467BBD-9CF0-420F-B001-BAF2D635EEDF" : [
 
+    ]
   },
   "sceneCameraHistory" : {
     "03467BBD-9CF0-420F-B001-BAF2D635EEDF" : [
@@ -124,5 +129,5 @@
   "sceneViewportBackgroundColors" : {
 
   },
-  "selectedSceneRelativePath" : "SpiderScene.usda"
+  "selectedSceneRelativePath" : "SnakeScene.usda"
 }

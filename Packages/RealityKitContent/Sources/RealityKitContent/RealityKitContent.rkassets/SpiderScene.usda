@@ -10,12 +10,12 @@
 
 def Xform "Root"
 {
-    def "source" (
+    def "Spider" (
         active = true
-        prepend references = @source.usdz@
+        prepend references = @Spider.usdz@
     )
     {
-        float3 xformOp:scale = (0.01, 0.01, 0.01)
+        float3 xformOp:scale = (0.0005, 0.0005, 0.0005)
         uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
     }
 }
