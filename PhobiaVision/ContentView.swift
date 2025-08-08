@@ -22,6 +22,7 @@ struct ContentView: View {
     @State private var isInLevel2 = false
     @State private var isInLevel3 = false
     @State private var isInLevel4 = false
+    @State private var isInLevel5 = false
     
     @State var immersiveSpaceSupported = false
 
@@ -321,6 +322,78 @@ struct ContentView: View {
                         }
                         .buttonStyle(PlainButtonStyle())
                     }
+                    
+                    
+                    
+                    
+                    
+                } else if isInLevel5 {
+                    // ================
+                    // Screen for Level 5
+                    // ================
+                    VStack(spacing: 20) {
+                        Text("Bonus Level")
+                            .font(.title)
+                        
+                        OptionsView(options: $options)
+                        
+                        Button(action: {
+                            if isInImmersiveSpace {
+                                Task {
+                                    await dismissImmersiveSpace()
+                                    isInImmersiveSpace = false
+                                }
+                            } else {
+                                Task {
+                                    await openImmersiveSpace(id: "TestView")
+                                    isInImmersiveSpace = true
+                                }
+                            }
+                            
+                        }) {
+                            Text(isInImmersiveSpace ? "Stop" :"Start")
+                                .font(.system(size: 20, weight: .semibold, design: .rounded))
+                                .multilineTextAlignment(.center)
+                                .foregroundColor(.white)
+                                .padding()
+                                .frame(maxWidth: 300)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 20)
+                                        .fill(.red)
+                                        .shadow(radius: 5)
+                                )
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                        
+                        Text("Bonus Level!")
+                            .padding()
+                        
+                        Button(action: {
+                            withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
+                                isInLevel5 = false
+                                showLevels = true
+                                
+                                Task {
+                                    await dismissImmersiveSpace()
+                                    isInImmersiveSpace = false
+                                }
+                            }
+                        }) {
+                            Text("Exit Bonus Level")
+                                .font(.system(size: 18, weight: .medium, design: .rounded))
+                                .foregroundColor(.primary)
+                                .frame(width: 140, height: 40)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 20)
+                                        .fill(Color.white.opacity(0.2))
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 20)
+                                                .stroke(Color.primary.opacity(0.3), lineWidth: 1)
+                                        )
+                                )
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                    }
 
                     
                     
@@ -371,7 +444,7 @@ struct ContentView: View {
                             .animation(.easeInOut(duration: 0.5).delay(0.2), value: showLevels)
 
                         LazyVGrid(columns: Array(repeating: GridItem(.fixed(120), spacing: 20), count: 2), spacing: 20) {
-                            ForEach(1...4, id: \.self) { level in
+                            ForEach(1...5, id: \.self) { level in
                                 Button(action: {
                                     selectedLevel = level
                                     navigateToLevel(level)
@@ -448,6 +521,8 @@ struct ContentView: View {
             return [Color.red, Color.red.opacity(0.7)]
         case 4:
             return [Color.purple, Color.purple.opacity(0.7)]
+        case 5:
+            return [Color.purple, Color.purple.opacity(0.7)]
         default:
             return [Color.blue, Color.blue.opacity(0.7)]
         }
@@ -467,6 +542,9 @@ struct ContentView: View {
             showLevels = false
         case 4:
             isInLevel4 = true
+            showLevels = false
+        case 5:
+            isInLevel5 = true
             showLevels = false
         default:
             break

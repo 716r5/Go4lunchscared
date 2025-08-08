@@ -112,7 +112,8 @@ struct TestView: View {
                 for i in 0..<ballCount {
                     let x = Float.random(in: -3.0...3.0)
                     let z = Float.random(in: -3.0...3.0)
-                    let position = SIMD3<Float>(x, 0.1, z)
+                    let y = Float.random(in: 1.0...5.0)
+                    let position = SIMD3<Float>(x, y, z)
                     
                     let fileName: String = options.animal
                     guard let animal = try? await ModelEntity(named: fileName) else {
@@ -120,8 +121,15 @@ struct TestView: View {
                         return
                     }
                     
-                    let scale = 0.001 / 100 * Float(options.scaling)
-                    animal.scale = SIMD3<Float>(1, 1, 1)
+                    var scale: Float
+
+                    if options.animal == "Lizard" {
+                        scale = 0.1 / 100 * Float(options.scaling)
+                    } else {
+                        scale = 0.001 / 100 * Float(options.scaling)
+                    }
+
+                    animal.scale = SIMD3<Float>(scale, scale, scale)
                     animal.position = position
                     animal.components.set(InputTargetComponent())
                     animal.generateCollisionShapes(recursive: true)
