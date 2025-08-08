@@ -53,70 +53,66 @@ struct ContentView: View {
 //                        isInImmersiveSpace = true
 //                    }
 //                }) {
-//                    Text("Test Button")
+//                    Text("Dare Devil Button")
 //                }
 
                 if isInLevel1 {
-                    // ================
-                    // Screen for Level 1
-                    // ================
-                    VStack(spacing: 20) {
-                        Text("Level 1")
-                            .font(.title)
-                        
-                        Button(action: {
-                            openWindow(id: "Level1")
-                        }) {
-                            Text("Ready to face your fears?")
-                                .font(.system(size: 20, weight: .semibold, design: .rounded))
-                                .multilineTextAlignment(.center)
-                                .foregroundColor(.white)
-                                .padding()
-                                .frame(maxWidth: 300)
-                                .background(
-                                    RoundedRectangle(cornerRadius: 20)
-                                        .fill(.red)
-                                        .shadow(radius: 5)
-                                )
-                        }
-                        .buttonStyle(PlainButtonStyle())
-                        
-                        // Hardcoded toggle (not wired to logic yet)
-                        Toggle("Hide spider on first flip", isOn: .constant(true))
-                            .disabled(false)
-                            .padding(.horizontal)
-                            .foregroundColor(.secondary)
-                        
-                        Text("")
-                            .padding()
-
-                        Button(action: {
-                            withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
-                                isInLevel1 = false
-                                showLevels = true
-                                dismissWindow(id: "Level1")
-                                dismissWindow(id: "Spider1")
-                                dismissWindow(id: "Spider2")
-                                dismissWindow(id: "Spider3")
-                                dismissWindow(id: "Spider4")
-                                dismissWindow(id: "Spider5")
-                            }
-                        }) {
-                            Text("Exit Level 1")
-                                .font(.system(size: 18, weight: .medium, design: .rounded))
-                                .foregroundColor(.primary)
-                                .frame(width: 140, height: 40)
-                                .background(
-                                    RoundedRectangle(cornerRadius: 20)
-                                        .fill(Color.white.opacity(0.2))
-                                        .overlay(
-                                            RoundedRectangle(cornerRadius: 20)
-                                                .stroke(Color.primary.opacity(0.3), lineWidth: 1)
-                                        )
-                                )
-                        }
-                        .buttonStyle(PlainButtonStyle())
-                    }
+                                    // ================
+                                    // Screen for Level 1
+                                    // ================
+                                    VStack(spacing: 20) {
+                                        Text("Level 1")
+                                            .font(.title)
+                                        
+                                        Button(action: {
+                                            let randomIndex = Int.random(in: 1...5)
+                                            let windowID = "Spider\(randomIndex)"
+                                            openWindow(id: windowID)
+                                        }) {
+                                            Text("Add Spider Into View")
+                                                .font(.system(size: 20, weight: .semibold, design: .rounded))
+                                                .multilineTextAlignment(.center)
+                                                .foregroundColor(.white)
+                                                .padding()
+                                                .frame(maxWidth: 300)
+                                                .background(
+                                                    RoundedRectangle(cornerRadius: 20)
+                                                        .fill(.red)
+                                                        .shadow(radius: 5)
+                                                )
+                                        }
+                                        .buttonStyle(PlainButtonStyle())
+                                        
+                                        Button(action: {
+                                            withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
+                                                isInLevel1 = false
+                                                showLevels = true
+                                                dismissWindow(id: "Spider1")
+                                                dismissWindow(id: "Spider2")
+                                                dismissWindow(id: "Spider3")
+                                                dismissWindow(id: "Spider4")
+                                                dismissWindow(id: "Spider5")
+                                            }
+                                        }) {
+                                            Text("Exit Level 1")
+                                                .font(.system(size: 18, weight: .medium, design: .rounded))
+                                                .foregroundColor(.primary)
+                                                .frame(width: 140, height: 40)
+                                                .background(
+                                                    RoundedRectangle(cornerRadius: 20)
+                                                        .fill(Color.white.opacity(0.2))
+                                                        .overlay(
+                                                            RoundedRectangle(cornerRadius: 20)
+                                                                .stroke(Color.primary.opacity(0.3), lineWidth: 1)
+                                                        )
+                                                )
+                                        }
+                                        .buttonStyle(PlainButtonStyle())
+                                    }
+                    
+                    
+                    
+                    
                     
                 } else if isInLevel2 {
                     // ================

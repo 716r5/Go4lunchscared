@@ -15,8 +15,8 @@ struct SpiderCardView: View {
     @State private var flipped = false
 
     var body: some View {
-        ZStack {
-            if flipped {
+//        ZStack {
+//            if flipped {
                 // Front: spider image + msg
                 VStack(spacing: 20) {
                     Text("Exposure")
@@ -35,29 +35,29 @@ struct SpiderCardView: View {
                         .foregroundColor(.secondary)
                 }
                 .frame(width: 400, height: 500)
-                .background(Color.white)
+//                .background(Color.white)
                 .cornerRadius(30)
                 .rotation3DEffect(.degrees(0), axis: (x: 0, y: 1, z: 0))
-            } else {
-                // Back: generic card initial view
-                VStack {
-                    Text("Flip when you're ready")
-                        .font(.headline)
-                        .padding()
-                }
-                .frame(width: 400, height: 500)
-                .background(Color.gray.opacity(0.2))
-                .cornerRadius(30)
-                .rotation3DEffect(.degrees(180), axis: (x: 0, y: 1, z: 0))
-            }
-        }
+//            } else {
+//                // Back: generic card initial view
+//                VStack {
+//                    Text("Flip when you're ready")
+//                        .font(.headline)
+//                        .padding()
+//                }
+//                .frame(width: 400, height: 500)
+//                .background(Color.gray.opacity(0.2))
+//                .cornerRadius(30)
+//                .rotation3DEffect(.degrees(180), axis: (x: 0, y: 1, z: 0))
+//            }
+//        }
         
         // flip animation (rotation3DEffect(_:axis:anchor:anchorZ:perspective:) -> render content view
-        .rotation3DEffect(.degrees(flipped ? 180 : 0), axis: (x: 0, y: 1, z: 0))
-        .onTapGesture {
-            withAnimation(.easeInOut(duration: 0.6)) {
-                flipped.toggle()
-            }
-        }
+//        .rotation3DEffect(.degrees(flipped ? 180 : 0), axis: (x: 0, y: 1, z: 0))
+//        .onTapGesture {
+//            withAnimation(.easeInOut(duration: 0.6)) {
+//                flipped.toggle()
+//            }
+//        }
     }
 }
