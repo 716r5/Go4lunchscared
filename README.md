@@ -1,4 +1,4 @@
-_1st Runner Ups at the (Spatial Computing Hackathon)[http://swiftin.sg/spatial] on the Apple Vision Pros_
+_1st Runner Ups at the [Spatial Computing Hackathon](http://swiftin.sg/spatial) on the Apple Vision Pros_
 
 # **PhoboSphere**  
 *Gamified Exposure Therapy for Apple Vision Pro*  
