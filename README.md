@@ -1,5 +1,3 @@
-# Go4lunchscared
-
 _1st Runner Ups at the (Spatial Computing Hackathon)[http://swiftin.sg/spatial] on the Apple Vision Pros_
 
 # **PhoboSphere**  
