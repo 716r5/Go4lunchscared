@@ -33,7 +33,7 @@ The system measures **physiological** and **behavioral** responses using Vision 
 - Spiders fall from above.  
 - Tracks defensive or avoidance actions (swatting, dodging).  (*)
 
-(*) Absolute beta version/feature tbc!
+(*) Unreleased and tbc!
 ---
 
 ## **Future Expansions**
